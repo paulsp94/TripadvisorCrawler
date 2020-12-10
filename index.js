@@ -71,6 +71,13 @@ const crawlCity = async (page, url) => {
   console.log(results);
   console.log(results.size);
 
+  const file = fs.createWriteStream("data/restaurantUrls.txt");
+  file.on("error", console.log);
+  results.forEach((item) => {
+    file.write(item + "\n");
+  });
+  file.end();
+
   progressBar.stop();
   await browser.close();
 })();
