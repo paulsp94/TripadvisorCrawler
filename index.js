@@ -54,16 +54,16 @@ const crawlCity = async (page, url) => {
     {},
     cliProgress.Presets.shades_classic
   );
-  progressBar.start(restaurantUrls.length, 0, { city: "" });
+  progressBar.start(restaurantUrls.length, 0);
 
   let url = restaurantUrls.pop();
-  progressBar.increment({ city: url });
+  progressBar.increment();
   let restaurants = await crawlCity(page, url);
   results.push(...restaurants);
 
   while (restaurantUrls.length) {
     url = restaurantUrls.pop();
-    progressBar.increment({ city: url });
+    progressBar.increment();
     restaurants = await crawlCity(page, url);
     results.push(...restaurants);
   }
