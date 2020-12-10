@@ -1,0 +1,13 @@
+{
+  "name": "TripadvisorCrawler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cli-progress": "^3.8.2",
+    "puppeteer": "^5.5.0"
+  }
+}
