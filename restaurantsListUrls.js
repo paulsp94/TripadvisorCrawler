@@ -23,20 +23,18 @@ console.log(urls.length);
   page.on("request", handleRequests);
 
   let url = urls.pop();
-  await page.goto(url);
-  let restaurantsUrl = await page.$eval(
-    restaurantsSectionLinkSelector,
-    (node) => node.href
-  );
+  await page.goto(url).catch(console.log);
+  let restaurantsUrl = await page
+    .$eval(restaurantsSectionLinkSelector, (node) => node.href)
+    .catch(console.log);
   cityRestaurantsUrls.push(restaurantsUrl);
 
   while (urls.length) {
     url = urls.pop();
-    await page.goto(url);
-    restaurantsUrl = await page.$eval(
-      restaurantsSectionLinkSelector,
-      (node) => node.href
-    );
+    await page.goto(url).catch(console.log);
+    restaurantsUrl = await page
+      .$eval(restaurantsSectionLinkSelector, (node) => node.href)
+      .catch(console.log);
     cityRestaurantsUrls.push(restaurantsUrl);
   }
 
