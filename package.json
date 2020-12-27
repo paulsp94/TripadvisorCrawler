@@ -15,6 +15,7 @@
     "puppeteer-cluster": "^0.22.0",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-adblocker": "^2.11.9",
-    "puppeteer-extra-plugin-stealth": "^2.6.5"
+    "puppeteer-extra-plugin-stealth": "^2.6.5",
+    "uuid": "^8.3.2"
   }
 }
