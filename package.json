@@ -4,18 +4,27 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "babel-node index.js",
+    "test-dynamo": "babel-node ./dynamoDB/dynamoDBConnector.js",
+    "test-mongo": "babel-node ./database/mongoConnector.js"
   },
   "dependencies": {
     "aws-sdk": "^2.817.0",
     "cli-progress": "^3.8.2",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.5.0",
+    "mongoose": "^5.11.8",
     "puppeteer": "^5.5.0",
     "puppeteer-cluster": "^0.22.0",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-adblocker": "^2.11.9",
     "puppeteer-extra-plugin-stealth": "^2.6.5",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/preset-env": "^7.12.11"
   }
 }
