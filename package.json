@@ -6,7 +6,8 @@
   "scripts": {
     "start": "babel-node index.js",
     "test-dynamo": "babel-node ./dynamoDB/dynamoDBConnector.js",
-    "test-mongo": "babel-node ./database/mongoConnector.js"
+    "test-mongo": "babel-node ./database/mongoConnector.js",
+    "deleteWrongs": "babel-node ./deleteWrongs.js"
   },
   "dependencies": {
     "aws-sdk": "^2.817.0",
