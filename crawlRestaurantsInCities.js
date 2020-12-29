@@ -59,6 +59,7 @@ const getRestaurantUrls = (page) =>
     await page.goto(url);
     let restaurants = new Set();
 
+    const cityId = url.match(/g.*-/)[0][:-1]
     let urls = await getRestaurantUrls(page);
     urls.forEach((url) => restaurants.add(url));
 
@@ -70,6 +71,7 @@ const getRestaurantUrls = (page) =>
     while (nextButtonUrl) {
       await page.goto(nextButtonUrl);
       urls = await getRestaurantUrls(page);
+      urls.filter((item) => item.includes(cityId));
       urls.forEach((url) => restaurants.add(url));
       nextButtonUrl = await page.$eval(nextButtonSelector, (node) => node.href);
     }
