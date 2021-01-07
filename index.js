@@ -228,6 +228,8 @@ const getUserData = async (page) => {};
     getAllUncrawledRestaurant,
     updateRestaurant,
     insertManyReviews,
+    updateReview,
+    updateUser,
   } = await initDatabase();
 
   const crawlRestaurant = await cluster.task(
