@@ -9,12 +9,43 @@ export const initDatabase = async () => {
     useCreateIndex: true,
   });
 
-  const RestaurantModal = mongoose.model("Restaurant", Restaurant);
-  const UserModal = mongoose.model("User", User);
-  const ReviewModal = mongoose.model("Review", Review);
+  // Create or connect Data Models
+  const RestaurantModel = mongoose.model("Restaurant", Restaurant);
+  const UserModel = mongoose.model("User", User);
+  const ReviewModel = mongoose.model("Review", Review);
 
+  const handleError = (err) => err && console.log(err);
+
+  // Restaurant handlers
   const insertManyRestaurants = (restaurants) =>
-    RestaurantModal.insertMany(restaurants, (err) => err && console.log(err));
+    RestaurantModel.insertMany(restaurants, handleError);
+  const updateRestaurant = (id, restaurant) =>
+    RestaurantModel.findByIdAndUpdate(id, restaurant);
+  const getUncrawledRestaurant = () =>
+    RestaurantModel.findOne({ crawled: false });
+  const getAllUncrawledRestaurant = () =>
+    RestaurantModel.find({ crawled: false });
 
-  return { RestaurantModal, UserModal, ReviewModal, insertManyRestaurants };
+  // User handlers
+  const getUserFromUserId = (userId) => UserModel.findOne({ userId: userId });
+  const insertUser = (user) => UserModel.insert(user);
+  const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user);
+
+  // Review handlers
+  const insertManyReviews = (reviews) =>
+    ReviewModel.insertMany(reviews, handleError);
+
+  return {
+    RestaurantModel,
+    insertManyRestaurants,
+    updateRestaurant,
+    getUncrawledRestaurant,
+    getAllUncrawledRestaurant,
+    UserModel,
+    getUserFromUserId,
+    insertUser,
+    updateUser,
+    ReviewModel,
+    insertManyReviews,
+  };
 };

@@ -10,6 +10,7 @@ export const Restaurant = new Schema(
       required: true,
       index: true,
     },
+    restaurantId: String,
     name: String,
     description: String,
     reviews: Number,
@@ -42,15 +43,21 @@ export const Restaurant = new Schema(
       type: Boolean,
       default: false,
     },
+    crawledReviews: {
+      type: Boolean,
+      defaul: false,
+    },
   },
   { timestamps: true }
 );
 
 export const User = new Schema(
   {
-    name: {
+    name: String,
+    userId: {
       type: String,
       required: true,
+      index: true,
     },
     ratings: Number,
     thumbsUp: Number,
@@ -77,9 +84,11 @@ export const User = new Schema(
 export const Review = new Schema(
   {
     restaurantId: { type: ObjectId, ref: "Restaurant" },
+    reviewId: String,
     stars: Number,
     title: String,
     text: String,
+    language: String,
     reviewDate: Date,
     visitDate: Date,
     mobile: Boolean,
