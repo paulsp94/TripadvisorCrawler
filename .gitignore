@@ -3,3 +3,5 @@ data/errors
 data/errors.json
 
 .env
+
+dist
