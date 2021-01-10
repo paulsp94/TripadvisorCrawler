@@ -2,53 +2,53 @@ import * as selectors from "./selectors";
 
 export const getRestaurantData = async (page) => {
   const name = await page
-    .$eval(selectors.nameSelector, (e) => e.innerText)
+    .$eval(selectors.name, (e) => e.innerText)
     .catch(() => undefined);
   const address = await page
-    .$eval(selectors.adressSelector, (e) => e.innerText)
+    .$eval(selectors.adress, (e) => e.innerText)
     .catch(() => undefined);
   const phone = await page
-    .$eval(selectors.phoneSelector, (e) => e.innerText)
+    .$eval(selectors.phone, (e) => e.innerText)
     .catch(() => undefined);
   const email = await page
-    .$eval(selectors.emailSelector, (e) =>
+    .$eval(selectors.email, (e) =>
       e.href.replace("mailto:", "").replace("?subject=?", "")
     )
     .catch(() => undefined);
   const website = await page
-    .$x(selectors.websiteXSelector)
+    .$x(selectors.websiteX)
     .then((items) => items[0]?.evaluate((e) => e.href));
-  const reviews = await page.$eval(selectors.reviewsSelector, (e) =>
+  const reviews = await page.$eval(selectors.reviews, (e) =>
     e?.innerText.replace(/\D/g, "")
   );
   const generalStar = await page
-    .$x(selectors.generalStarsXSelector)
+    .$x(selectors.generalStarsX)
     .then((items) =>
       items[0]?.$eval(
-        selectors.uiBubbleSelector,
+        selectors.uiBubble,
         (node) => node.classList[1].replace("bubble_", "") / 10
       )
     );
   const detailStars = await page
-    .$x(selectors.starsXSelector)
+    .$x(selectors.starsX)
     .then((items) =>
-      items[0]?.$$eval(selectors.uiBubbleSelector, (nodes) =>
+      items[0]?.$$eval(selectors.uiBubble, (nodes) =>
         nodes.map((node) => node.classList[1].replace("bubble_", "") / 10)
       )
     );
   const priceRange = await page
-    .$x(selectors.priceRangeXSelector)
+    .$x(selectors.priceRangeX)
     .then((items) => items[0]?.evaluate((e) => e.innerText));
   const priceLevel = await page.$eval(
-    selectors.priceLevelSelector,
+    selectors.priceLevel,
     (node) => node.innerText
   );
   const kitchen = await page
-    .$x(selectors.kitchenXSelector)
+    .$x(selectors.kitchenX)
     .then((items) => items[0]?.evaluate((e) => e.innerText))
     .then((str) => str.split(",").map((item) => item.trim()));
   const city = await page.$$eval(
-    selectors.breadcrumbLinkSelector,
+    selectors.breadcrumbLink,
     (nodes) =>
       nodes.find((item) => item.getAttribute("onclick").includes("City"))
         .innerText
@@ -59,30 +59,30 @@ export const getRestaurantData = async (page) => {
   await page.waitForSelector(selectors.allLanguagesSelected);
 
   const ratings = await page
-    .$(selectors.ratingDistributionSelector)
+    .$(selectors.ratingDistribution)
     .then((e) =>
-      e.$$eval(selectors.ratingItemSelector, (nodes) =>
+      e.$$eval(selectors.ratingItem, (nodes) =>
         nodes.map((node) => node.lastChild.innerText)
       )
     );
 
-  await page.waitForXPath(selectors.allDetailsSelector);
+  await page.waitForXPath(selectors.allDetails);
   await page
-    .$x(selectors.allDetailsSelector)
+    .$x(selectors.allDetails)
     .then((items) => items[0]?.evaluate((e) => e.click()));
-  await page.waitForXPath(selectors.detailsSelector);
+  await page.waitForXPath(selectors.details);
 
   const otherDiets = await page
-    .$x(selectors.otherDietsXSelector)
+    .$x(selectors.otherDietsX)
     .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
   const description = await page
-    .$x(selectors.descriptionXSelector)
+    .$x(selectors.descriptionX)
     .then((items) => items[0]?.evaluate((e) => e.innerText));
   const meals = await page
-    .$x(selectors.mealsXSelector)
+    .$x(selectors.mealsX)
     .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
   const otherFunctions = await page
-    .$x(selectors.otherFunctionsXSelector)
+    .$x(selectors.otherFunctionsX)
     .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
 
   return {
