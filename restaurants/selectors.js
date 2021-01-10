@@ -9,6 +9,8 @@ export const generalStarsXSelector =
 export const starsXSelector = '//div[text()="GESAMTWERTUNGEN"]/parent::*';
 export const priceRangeXSelector =
   '//div[text()="PREISSPANNE"]/parent::*/div[last()]';
+export const priceLevelSelector =
+  'div[data-test-target="restaurant-detail-info"]>div:nth-child(2)>span:nth-child(3)>a:first-child';
 export const kitchenXSelector = '//div[text()="KÜCHEN"]/parent::*/div[last()]';
 export const descriptionXSelector =
   '//div[text()="Beschreibung"]/parent::*/div[last()]';

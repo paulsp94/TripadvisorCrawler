@@ -39,6 +39,10 @@ export const getRestaurantData = async (page) => {
   const priceRange = await page
     .$x(selectors.priceRangeXSelector)
     .then((items) => items[0]?.evaluate((e) => e.innerText));
+  const priceLevel = await page.$eval(
+    selectors.priceLevelSelector,
+    (node) => node.innerText
+  );
   const kitchen = await page
     .$x(selectors.kitchenXSelector)
     .then((items) => items[0]?.evaluate((e) => e.innerText))
@@ -101,6 +105,7 @@ export const getRestaurantData = async (page) => {
     website,
     kitchen,
     priceRange,
+    priceLevel,
     otherDiets,
     meals,
     otherFunctions,
