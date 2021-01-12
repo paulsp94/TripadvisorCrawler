@@ -67,6 +67,8 @@ export const User = new Schema(
     level: Number,
     memberSince: Date,
     homeTown: String,
+    age: String,
+    sex: String,
     ratingDistribution: {
       excellent: Number,
       verygood: Number,
@@ -94,6 +96,10 @@ export const Review = new Schema(
     visitDate: Date,
     mobile: Boolean,
     thumbsUp: Number,
+    crawled: {
+      type: Boolean,
+      default: false,
+    },
     postedBy: { type: ObjectId, ref: "User" },
   },
   { timestamps: true }
