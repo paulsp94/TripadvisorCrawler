@@ -18,22 +18,23 @@ export const initDatabase = async () => {
 
   // Restaurant handlers
   const insertManyRestaurants = (restaurants) =>
-    RestaurantModel.insertMany(restaurants, handleError);
+    RestaurantModel.insertMany(restaurants, handleError).exec();
   const updateRestaurant = (id, restaurant) =>
-    RestaurantModel.findByIdAndUpdate(id, restaurant);
+    RestaurantModel.findByIdAndUpdate(id, restaurant).exec();
   const getUncrawledRestaurant = () =>
-    RestaurantModel.findOne({ crawled: false });
+    RestaurantModel.findOne({ crawled: false }).exec();
   const getAllUncrawledRestaurant = () =>
-    RestaurantModel.find({ crawled: false });
+    RestaurantModel.find({ crawled: false }).exec();
 
   // User handlers
-  const getUserFromUserId = (userId) => UserModel.findOne({ userId: userId });
-  const insertUser = (user) => UserModel.insert(user);
-  const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user);
+  const getUserFromUserId = (userId) =>
+    UserModel.findOne({ userId: userId }).exec();
+  const insertUser = (user) => UserModel.insert(user).exec();
+  const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user).exec();
 
   // Review handlers
   const insertManyReviews = (reviews) =>
-    ReviewModel.insertMany(reviews, handleError);
+    ReviewModel.insertMany(reviews, handleError).exec();
 
   return {
     RestaurantModel,
