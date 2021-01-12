@@ -1,6 +1,9 @@
 import * as selectors from "./selectors";
 
 export const getRestaurantData = async (page) => {
+  const restaurantIdRegex = /-(d\d*)-/;
+
+  const restaurantId = restaurantIdRegex.exec(page.url())[0];
   const name = await page
     .$eval(selectors.name, (e) => e.innerText)
     .catch(() => undefined);
@@ -18,9 +21,9 @@ export const getRestaurantData = async (page) => {
   const website = await page
     .$x(selectors.websiteX)
     .then((items) => items[0]?.evaluate((e) => e.href));
-  const reviews = await page.$eval(selectors.reviews, (e) =>
-    e?.innerText.replace(/\D/g, "")
-  );
+  const reviews = await page
+    .$eval(selectors.reviews, (e) => e.innerText.replace(/\D/g, ""))
+    .catch(() => undefined);
   const generalStar = await page
     .$x(selectors.generalStarsX)
     .then((items) =>
@@ -87,6 +90,7 @@ export const getRestaurantData = async (page) => {
 
   return {
     url: page.url(),
+    restaurantId,
     name,
     description,
     reviews,
