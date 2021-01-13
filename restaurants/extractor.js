@@ -3,7 +3,7 @@ import * as selectors from "./selectors";
 export const getRestaurantData = async (page) => {
   const restaurantIdRegex = /-(d\d*)-/;
 
-  const restaurantId = restaurantIdRegex.exec(page.url())[0];
+  const restaurantId = restaurantIdRegex.exec(page.url())[1];
   const name = await page
     .$eval(selectors.name, (e) => e.innerText)
     .catch(() => undefined);
@@ -27,10 +27,12 @@ export const getRestaurantData = async (page) => {
   const generalStar = await page
     .$x(selectors.generalStarsX)
     .then((items) =>
-      items[0]?.$eval(
-        selectors.uiBubble,
-        (node) => node.classList[1].replace("bubble_", "") / 10
-      )
+      items[0]
+        ?.$eval(
+          selectors.uiBubble,
+          (node) => node?.classList[1].replace("bubble_", "") / 10
+        )
+        .catch(() => undefined)
     );
   const detailStars = await page
     .$x(selectors.starsX)
@@ -42,14 +44,13 @@ export const getRestaurantData = async (page) => {
   const priceRange = await page
     .$x(selectors.priceRangeX)
     .then((items) => items[0]?.evaluate((e) => e.innerText));
-  const priceLevel = await page.$eval(
-    selectors.priceLevel,
-    (node) => node.innerText
-  );
+  const priceLevel = await page
+    .$eval(selectors.priceLevel, (node) => node.innerText)
+    .catch(() => undefined);
   const kitchen = await page
     .$x(selectors.kitchenX)
     .then((items) => items[0]?.evaluate((e) => e.innerText))
-    .then((str) => str.split(",").map((item) => item.trim()));
+    .then((str) => str?.split(",").map((item) => item.trim()));
   const city = await page.$$eval(
     selectors.breadcrumbLink,
     (nodes) =>
@@ -96,10 +97,10 @@ export const getRestaurantData = async (page) => {
     reviews,
     stars: {
       general: generalStar,
-      kitchen: detailStars[0],
-      service: detailStars[1],
-      quality: detailStars[2],
-      furnishing: detailStars[3],
+      kitchen: detailStars && detailStars[0],
+      service: detailStars && detailStars[1],
+      quality: detailStars && detailStars[2],
+      furnishing: detailStars && detailStars[3],
     },
     phone,
     address,
@@ -114,11 +115,11 @@ export const getRestaurantData = async (page) => {
     meals,
     otherFunctions,
     ratingDistribution: {
-      excellent: ratings[0],
-      verygood: ratings[1],
-      good: ratings[2],
-      fair: ratings[3],
-      poor: ratings[4],
+      excellent: ratings && ratings[0],
+      verygood: ratings && ratings[1],
+      good: ratings && ratings[2],
+      fair: ratings && ratings[3],
+      poor: ratings && ratings[4],
     },
     crawled: true,
   };
