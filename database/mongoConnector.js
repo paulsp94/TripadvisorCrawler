@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { Restaurant, Review, User } from "./mongoSchemas";
 
-export const initDatabase = async () => {
-  await mongoose.connect("mongodb://localhost:27017/tripadvisor", {
+export const initDatabase = async (username, password) => {
+  const uri = (username && password) ? `mongodb://${username}:${password}@localhost:27017/tripadvisor` : "mongodb://localhost:27017/tripadvisor";
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

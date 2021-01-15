@@ -20,6 +20,9 @@ puppeteer.use(ressourceBlocker);
 
 import { Cluster } from "puppeteer-cluster";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import fs from "fs";
 
 import { initDatabase } from "./database/mongoConnector";
@@ -31,6 +34,8 @@ process.on("unhandledRejection", (error, p) => {
   console.dir(error);
 });
 
+const { MONGO_USER, MONGO_PASS } = process.env;
+
 const baseURL = "https://www.tripadvisor.de/";
 const nextButtonSelector = ".nav.next";
 const reviewLinkSelector = 'a[href^="/ShowUserReview"]';
@@ -41,14 +46,14 @@ export const allLanguagesSelected =
 
 (async () => {
   const cluster = await Cluster.launch({
-    concurrency: Cluster.CONCURRENCY_BROWSER,
-    maxConcurrency: 4,
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 32,
     monitor: true,
     timeout: 3600 * 2000,
     puppeteer,
     puppeteerOptions: {
       timeout: 600 * 1000,
-      args: ["--disable-dev-shm-usage"],
+      args: ["--disable-dev-shm-usage", "--no-sandbox"],
     },
   });
 
@@ -66,7 +71,7 @@ export const allLanguagesSelected =
     insertManyReviews,
     updateReview,
     getAllUncrawledReviews,
-  } = await initDatabase();
+  } = await initDatabase(MONGO_USER, MONGO_PASS);
 
   const crawlRestaurant = async ({ page, data: restaurant }) => {
     await page.goto(restaurant.url);
@@ -147,7 +152,7 @@ export const allLanguagesSelected =
   uncrawledReviews.forEach((item) => cluster.queue(item, crawlReview));
 
   let data = JSON.stringify(errors);
-  fs.writeFileSync("data/crawlerErrors.json", data);
+  // fs.writeFileSync("data/crawlerErrors.json", data);
 
   await cluster.idle();
   await cluster.close();
