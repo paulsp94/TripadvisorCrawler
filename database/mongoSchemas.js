@@ -30,7 +30,7 @@ export const Restaurant = new Schema(
     kitchen: [String],
     priceLevel: String,
     priceRange: String,
-    otherDiets: String,
+    otherDiets: [String],
     meals: [String],
     otherFunctions: [String],
     ratingDistribution: {
@@ -86,7 +86,12 @@ export const User = new Schema(
 
 export const Review = new Schema(
   {
-    restaurantId: { type: ObjectId, ref: "Restaurant" },
+    restaurantId: { type: ObjectId, ref: "Restaurant", required: true },
+    url: {
+      type: String,
+      required: true,
+      index: true,
+    },
     reviewId: String,
     stars: Number,
     title: String,

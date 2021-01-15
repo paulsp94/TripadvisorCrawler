@@ -18,9 +18,9 @@ export const initDatabase = async () => {
 
   // Restaurant handlers
   const insertManyRestaurants = (restaurants) =>
-    RestaurantModel.insertMany(restaurants, handleError).exec();
+    RestaurantModel.insertMany(restaurants, handleError);
   const updateRestaurant = (id, restaurant) =>
-    RestaurantModel.findByIdAndUpdate(id, restaurant).exec();
+    RestaurantModel.findByIdAndUpdate(id, restaurant, handleError);
   const getUncrawledRestaurant = () =>
     RestaurantModel.findOne({ crawled: false }).exec();
   const getAllUncrawledRestaurant = () =>
@@ -29,12 +29,17 @@ export const initDatabase = async () => {
   // User handlers
   const getUserFromUserId = (userId) =>
     UserModel.findOne({ userId: userId }).exec();
-  const insertUser = (user) => UserModel.insert(user).exec();
+  const insertUser = async (user) => {
+    const newUser = new UserModel(user);
+    const createdUser = await newUser.save();
+    return createdUser;
+  };
   const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user).exec();
 
   // Review handlers
-  const insertManyReviews = (reviews) =>
-    ReviewModel.insertMany(reviews, handleError).exec();
+  const insertManyReviews = (reviews) => ReviewModel.insertMany(reviews);
+  const getAllUncrawledReviews = () =>
+    ReviewModel.find({ crawled: false }).exec();
 
   return {
     RestaurantModel,
@@ -48,5 +53,6 @@ export const initDatabase = async () => {
     updateUser,
     ReviewModel,
     insertManyReviews,
+    getAllUncrawledReviews,
   };
 };
