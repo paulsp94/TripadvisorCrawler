@@ -22,7 +22,7 @@ export const getRestaurantData = async (page) => {
     .$x(selectors.websiteX)
     .then((items) => items[0]?.evaluate((e) => e.href));
   const reviews = await page
-    .$eval(selectors.reviews, (e) => e.innerText.replace(/\D/g, ""))
+    .$eval(selectors.reviews, (e) => parseInt(e.innerText.replace(/\D/g, "")))
     .catch(() => undefined);
   const generalStar = await page
     .$x(selectors.generalStarsX)
@@ -51,43 +51,53 @@ export const getRestaurantData = async (page) => {
     .$x(selectors.kitchenX)
     .then((items) => items[0]?.evaluate((e) => e.innerText))
     .then((str) => str?.split(",").map((item) => item.trim()));
-  const city = await page.$$eval(
-    selectors.breadcrumbLink,
-    (nodes) =>
-      nodes.find((item) => item.getAttribute("onclick").includes("City"))
-        .innerText
+  const city = await page.$$eval(selectors.breadcrumbLink, (nodes) =>
+    nodes.find(
+      (item) => item.getAttribute("onclick").includes("City")?.innerText
+    )
   );
 
-  await page.waitForSelector(selectors.allLanguages);
-  await page.click(selectors.allLanguages);
-  await page.waitForSelector(selectors.allLanguagesSelected);
+  let ratings;
+  if (reviews !== 0) {
+    await page.waitForSelector(selectors.allLanguages);
+    await page.click(selectors.allLanguages);
+    await page.waitForSelector(selectors.allLanguagesSelected);
 
-  const ratings = await page
-    .$(selectors.ratingDistribution)
-    .then((e) =>
-      e.$$eval(selectors.ratingItem, (nodes) =>
-        nodes.map((node) => node.lastChild.innerText)
-      )
-    );
+    ratings = await page
+      .$(selectors.ratingDistribution)
+      .then((e) =>
+        e.$$eval(selectors.ratingItem, (nodes) =>
+          nodes.map((node) => node.lastChild.innerText)
+        )
+      );
+  }
 
-  await page.waitForXPath(selectors.allDetails);
-  await page
-    .$x(selectors.allDetails)
-    .then((items) => items[0]?.evaluate((e) => e.click()));
-  await page.waitForXPath(selectors.details);
+  let otherDiets, description, meals, otherFunctions;
+  try {
+    await page.waitForXPath(selectors.allDetails);
+    await page
+      .$x(selectors.allDetails)
+      .then((items) => items[0]?.evaluate((e) => e.click()));
+    await page.waitForXPath(selectors.details);
 
-  const otherDiets = await page
-    .$x(selectors.otherDietsX)
-    .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
-  const description = await page
-    .$x(selectors.descriptionX)
-    .then((items) => items[0]?.evaluate((e) => e.innerText));
-  const meals = await page
-    .$x(selectors.mealsX)
-    .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
-  const otherFunctions = await page
-    .$x(selectors.otherFunctionsX)
-    .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
+    otherDiets = await page
+      .$x(selectors.otherDietsX)
+      .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
+    description = await page
+      .$x(selectors.descriptionX)
+      .then((items) => items[0]?.evaluate((e) => e.innerText));
+    meals = await page
+      .$x(selectors.mealsX)
+      .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
+    otherFunctions = await page
+      .$x(selectors.otherFunctionsX)
+      .then((items) => items[0]?.evaluate((e) => e.innerText.split(", ")));
+  } catch (error) {
+    console.error(page.url(), ": ", error.message);
+  }
+
+  const zipCode =
+    address && address.match(/\d{5}/g) && address.match(/\d{5}/g)[0];
 
   return {
     url: page.url(),
@@ -106,7 +116,7 @@ export const getRestaurantData = async (page) => {
     address,
     email,
     city,
-    zipCode: address.match(/\d{5}/g)[0],
+    zipCode,
     website,
     kitchen,
     priceRange,
