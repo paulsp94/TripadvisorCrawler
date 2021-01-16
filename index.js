@@ -71,7 +71,7 @@ export const allLanguagesSelected =
     insertManyReviews,
     updateReview,
     getAllUncrawledReviews,
-  } = await initDatabase(MONGO_USER, MONGO_PASS);
+  } = await initDatabase(process.env.MONGO_USER, process.env.MONGO_PASS);
 
   const crawlRestaurant = async ({ page, data: restaurant }) => {
     await page.goto(restaurant.url);
