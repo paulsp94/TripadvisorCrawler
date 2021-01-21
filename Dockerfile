@@ -1,9 +1,7 @@
-FROM zenika/alpine-chrome:with-puppeteer
+FROM buildkite/puppeteer
 
-RUN mkdir /usr/src/app/crawler
-WORKDIR /usr/src/app/crawler
-COPY --chown=chrome:chrome package.json .
+COPY . /crawler
+WORKDIR /crawler
+
 RUN npm install
-COPY --chown=chrome:chrome . .
-
 CMD npm start
