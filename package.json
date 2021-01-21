@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.817.0",
+    "chrono-node": "^2.1.11",
     "cli-progress": "^3.8.2",
     "dotenv": "^8.2.0",
     "dynamoose": "^2.5.0",
