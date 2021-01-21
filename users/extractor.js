@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 import * as selectors from "./selectors";
 
 export const getUserData = async (page, userId) => {
-  await page.waitForSelector(selectors.level);
+  await page.waitForSelector(selectors.name);
   const name = await page.$eval(selectors.name, (node) => node.innerText);
   const level = await page
     .$eval(selectors.level, (node) => node.innerText)
@@ -59,7 +59,7 @@ export const getUserData = async (page, userId) => {
     visitedTowns,
     images,
     level,
-    memberSince: DateTime.fromISO(memberSince).toJSDate(),
+    memberSince: DateTime.fromISO(memberSince).toISO(),
     homeTown,
     age,
     sex,
