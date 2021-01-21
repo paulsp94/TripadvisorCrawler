@@ -11,5 +11,5 @@ export const images =
 export const memberSince =
   ".memberdescriptionReviewEnhancements > li:first-child";
 export const personalInfo =
-  ".memberdescriptionReviewEnhancements > li:last-child";
+  ".memberdescriptionReviewEnhancements > li:nth-child(2)";
 export const ratingItems = ".chartRowReviewEnhancements > span:last-child";
