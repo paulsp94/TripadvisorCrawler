@@ -1,6 +1,5 @@
 // import { DateTime } from "luxon";
 import { DateTime } from "luxon";
-import { initDatabase } from "../database/mongoConnector";
 import { getUserData } from "../users/extractor";
 import * as selectors from "./selectors";
 
