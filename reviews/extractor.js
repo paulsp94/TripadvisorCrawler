@@ -1,15 +1,11 @@
-// import { DateTime } from "luxon";
-import { DateTime } from "luxon";
+import * as chrono from 'chrono-node';
+
 import { getUserData } from "../users/extractor";
 import * as selectors from "./selectors";
 
 export const getReviewData = async (page, restaurantId, getUserFromUserId, insertUser) => {
   const languageRegex = /sl=(\w{2})&/;
   const reviewIdRegex = /-(r\d*)-/;
-  const formatDate = (dateString, parserFormat) =>
-    DateTime.fromFormat(dateString, parserFormat, {
-      locale: "de",
-    }).toJSDate();
 
   const baseFrame = await page.$(selectors.base);
 
@@ -21,19 +17,19 @@ export const getReviewData = async (page, restaurantId, getUserFromUserId, inser
     )
     .catch(() => undefined);
   const title = await page
-    .$eval(selectors.title, (node) => node?.innerText.slice(1, -1))
+    .$eval(selectors.title, (node) => node.innerText.slice(1, -1))
     .catch(() => undefined);
   const text = await baseFrame
-    .$eval(selectors.text, (node) => node?.innerText)
+    .$eval(selectors.text, (node) => node.innerText)
     .catch(() => undefined);
   const language = await baseFrame
-    .$eval(selectors.translateButton, (node) => node?.firstChild.dataset.url)
+    .$eval(selectors.translateButton, (node) => node.firstChild.dataset.url)
     .catch(() => undefined);
   const reviewDate = await baseFrame
-    .$eval(selectors.ratingData, (node) => node?.innerText.slice(9).trim())
+    .$eval(selectors.ratingData, (node) => node.title.trim())
     .catch(() => undefined);
   const visitDate = await baseFrame
-    .$eval(selectors.visitData, (node) => node?.parentNode.innerText.slice(14))
+    .$eval(selectors.visitData, (node) => node.parentNode.innerText.slice(14).trim())
     .catch(() => undefined);
   const mobile = await baseFrame.$(selectors.mobile).then((node) => !!node);
   const thumbsUp =
@@ -66,8 +62,8 @@ export const getReviewData = async (page, restaurantId, getUserFromUserId, inser
     title,
     text,
     language: (language && languageRegex.exec(language)[1]) || "de",
-    reviewDate: reviewDate && formatDate(reviewDate, "DDD"),
-    visitDate: visitDate && formatDate(visitDate, "MMMM yyyy"),
+    reviewDate: chrono.de.parseDate(reviewDate),
+    visitDate: visitDate,
     mobile,
     thumbsUp,
     crawled: true,
