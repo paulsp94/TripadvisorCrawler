@@ -9,6 +9,19 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
     ports:
       - "27017-27019:27017-27019"
+  
+  metabase:
+    image: metabase/metabase
+    ports:
+      - "3000:3000"
+    volumes:
+      - ~/metabase-data:/metabase-data
+    environment: 
+      - MB_DB_FILE=/metabase-data/metabase.db
+    network_mode: 'host'
+
 
   crawler:
     build: .
+    environment: 
+      - NODE_OPTIONS=--max_old_space_size=24576
