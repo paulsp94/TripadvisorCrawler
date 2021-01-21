@@ -4,14 +4,13 @@ import { initDatabase } from "../database/mongoConnector";
 import { getUserData } from "../users/extractor";
 import * as selectors from "./selectors";
 
-export const getReviewData = async (page, restaurantId) => {
+export const getReviewData = async (page, restaurantId, getUserFromUserId, insertUser) => {
   const languageRegex = /sl=(\w{2})&/;
   const reviewIdRegex = /-(r\d*)-/;
   const formatDate = (dateString, parserFormat) =>
     DateTime.fromFormat(dateString, parserFormat, {
       locale: "de",
     }).toJSDate();
-  const { getUserFromUserId, insertUser } = await initDatabase();
 
   const baseFrame = await page.$(selectors.base);
 
@@ -68,8 +67,8 @@ export const getReviewData = async (page, restaurantId) => {
     title,
     text,
     language: (language && languageRegex.exec(language)[1]) || "de",
-    reviewDate: formatDate(reviewDate, "DDD"),
-    visitDate: formatDate(visitDate, "MMMM yyyy"),
+    reviewDate: reviewDate && formatDate(reviewDate, "DDD"),
+    visitDate: visitDate && formatDate(visitDate, "MMMM yyyy"),
     mobile,
     thumbsUp,
     crawled: true,

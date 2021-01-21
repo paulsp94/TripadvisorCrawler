@@ -47,8 +47,8 @@ export const allLanguagesSelected =
 (async () => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
-    maxConcurrency: 32,
-    monitor: true,
+    maxConcurrency: 16,
+    // monitor: true,
     timeout: 3600 * 2000,
     puppeteer,
     puppeteerOptions: {
@@ -71,6 +71,8 @@ export const allLanguagesSelected =
     insertManyReviews,
     updateReview,
     getAllUncrawledReviews,
+    getUserFromUserId, 
+    insertUser
   } = await initDatabase(process.env.MONGO_USER, process.env.MONGO_PASS);
 
   const crawlRestaurant = async ({ page, data: restaurant }) => {
@@ -126,7 +128,7 @@ export const allLanguagesSelected =
 
   const crawlReview = async ({ page, data: review }) => {
     await page.goto(review.url);
-    const reviewData = await getReviewData(page, review._id);
+    const reviewData = await getReviewData(page, review._id, getUserFromUserId, insertUser);
     await updateReview(review._id, reviewData);
     checkIfErrorUrlSuccessful(review);
   };

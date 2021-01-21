@@ -41,12 +41,12 @@ export const initDatabase = async (username, password) => {
     const createdUser = await newUser.save();
     return createdUser;
   };
-  const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user).exec();
-
+  const updateUser = (id, user) => UserModel.findByIdAndUpdate(id, user, handleError);
+  
   // Review handlers
   const insertManyReviews = (reviews) => ReviewModel.insertMany(reviews);
-  const getAllUncrawledReviews = () =>
-    ReviewModel.find({ crawled: false }).exec();
+  const getAllUncrawledReviews = () => ReviewModel.find({ crawled: false }).exec();
+  const updateReview = (id, review) => ReviewModel.findByIdAndUpdate(id, review, handleError);
 
   return {
     RestaurantModel,
@@ -61,5 +61,6 @@ export const initDatabase = async (username, password) => {
     ReviewModel,
     insertManyReviews,
     getAllUncrawledReviews,
+    updateReview,
   };
 };
