@@ -15,7 +15,7 @@
     "chrono-node": "^2.1.11",
     "cli-progress": "^3.8.2",
     "dotenv": "^8.2.0",
-    "dynamoose": "^2.5.0",
+    "dynamoose": "^2.7.0",
     "enchant-puppeteer": "^0.0.6",
     "luxon": "^1.25.0",
     "mongoose": "^5.11.8",
